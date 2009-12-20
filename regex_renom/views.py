@@ -21,10 +21,28 @@ __VERSION__ = 0.1
 
 # Create your views here.
 from django.shortcuts import render_to_response
+from django import template
 from os import path, listdir
 _ROOT_PATH = path.dirname(path.realpath(__file__))
 
-def getFiles(request, rel = '', title = ''):
+def genHtmlCode(arg):
+	d = {'basename' : arg['basename']}
+	files = []
+	for f in sorted(arg['files']):
+		if type(f) is dict:
+			files.append([genHtmlCode(f), 'generate_new_table'])
+		elif type(f) is list:
+			files.append(f)
+		else:
+			# as the template expects a 2-position list ('now' and 'after'), let's do it
+			files.append([f, ''])
+	d['files'] = files
+	template_folder = path.join(_ROOT_PATH, '..', 'template', 'regex_renom', 'folder.tpl')
+	t = template.Template(open(template_folder).read())
+	return t.render(template.Context(d))
+
+
+def getFiles(request):
 	def listFilesRecNested(_dir = '.'):
 		"""Returns all mp3 under @_DIR arg recursivelly in the form:
 		{'basename' : 'dir1', 'files' : 
@@ -32,23 +50,25 @@ def getFiles(request, rel = '', title = ''):
 			...},...]
 		,..}"""
 
-		from os import path,listdir,chdir
-		files = [_dir,]
-		chdir(_dir)
-		for file in listdir('.'):
-			if path.isdir(file):
-				files.append(listFilesRecNested(file))
-			else:
-				files.append(file)
-		if _dir != '.':
-			chdir('..')
-		return files
-
-	dir_name = path.join(_ROOT_PATH, rel)
-	if not title:
-		title = path.basename(dir_name)
-	for f in gutfunctions.listFilesRecNested(dir_name)
-	print files
-	d = dict([(i, eval(i)) for i in ('files', 'title')])
+		from os import path,listdir
+		files = []
+		for f in listdir(_dir):
+			file_rel = path.join(_dir,f)
+			if path.isdir(file_rel):
+				files.append(listFilesRecNested(file_rel))
+			else:  # regular file
+				files.append(f)
+		return {'basename' : path.basename(_dir), 'files' : files}
+	
+	get = request.GET
+	rel = get.get('directory', '')
+	if rel.startswith('/'):
+		dir_name = rel
+	else:
+		dir_name = path.join(_ROOT_PATH, rel) if rel else _ROOT_PATH
+	title = path.basename(dir_name)
+	files = genHtmlCode(listFilesRecNested(dir_name))
+	d = {'content' : files, 'title' : title}
+	d.update(dict(get.items()))
 	return render_to_response('regex_renom/main.tpl', d)
 
