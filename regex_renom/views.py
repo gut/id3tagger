@@ -22,7 +22,8 @@ __VERSION__ = 0.1
 # Create your views here.
 from django.shortcuts import render_to_response
 from django import template
-from os import path, listdir
+from os import path, listdir, getcwd
+from defs import *
 _ROOT_PATH = path.dirname(path.realpath(__file__))
 
 def genHtmlCode(arg):
@@ -62,11 +63,12 @@ def getFiles(request):
 	
 	_get = request.GET
 	rel = _get.get('directory', '')
+	workdir = getcwd()
 	if rel.startswith('/'):
 		dir_name = rel
 	else:
-		dir_name = path.join(_ROOT_PATH, rel) if rel else _ROOT_PATH
-	title = path.basename(dir_name)
+		dir_name = path.join(workdir, rel) if rel else workdir
+	title = '%s :: %s' % (APP_NAME, dir_name)
 	files = genHtmlCode(listFilesRecNested(dir_name))
 	d = {'content' : files, 'title' : title}
 	d.update(dict(_get.items()))
