@@ -60,8 +60,8 @@ def getFiles(request):
 				files.append(f)
 		return {'basename' : path.basename(_dir), 'files' : files}
 	
-	get = request.GET
-	rel = get.get('directory', '')
+	_get = request.GET
+	rel = _get.get('directory', '')
 	if rel.startswith('/'):
 		dir_name = rel
 	else:
@@ -69,6 +69,6 @@ def getFiles(request):
 	title = path.basename(dir_name)
 	files = genHtmlCode(listFilesRecNested(dir_name))
 	d = {'content' : files, 'title' : title}
-	d.update(dict(get.items()))
+	d.update(dict(_get.items()))
 	return render_to_response('regex_renom/main.tpl', d)
 
