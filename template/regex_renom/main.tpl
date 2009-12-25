@@ -11,9 +11,14 @@
 		<td>Directory to work:</td><td><input type="text" name="directory" value="{{ directory }}"></input></td>
 	</tr>
 	<tr>
-		<td>Regex to search:</td><td><input type="text" name="search" value="{{ search }}"></input></td>
-	<tr>
+		<td>Only this kind of file:</td><td><input type="text" name="extension" value="{{ extension }}"></input></td>
 	</tr>
+	<tr class="spacer">
+	</tr>
+	<tr>
+		<td>Regex to search:</td><td><input type="text" name="search" value="{{ search }}"></input></td>
+	</tr>
+	<tr>
 		<td>Replacement:</td><td><input type="text" name="replacement" value="{{ replacement }}"></input></td>
 	</tr>
 	<tr>
