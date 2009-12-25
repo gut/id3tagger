@@ -54,7 +54,7 @@ def getFiles(request):
 		from os import path,listdir
 		files = []
 		for f in listdir(_dir):
-			if f.startswith('.') and hide_hidden:
+			if f.startswith('.') and not f.startswith('./') and hide_hidden:
 				continue  # we don't want to see hidden files
 			file_rel = path.join(_dir,f)
 			if path.isdir(file_rel):
