@@ -44,7 +44,7 @@ def genHtmlCode(arg):
 
 
 def getFiles(request):
-	def listFilesRecNested(_dir = '.'):
+	def listFilesRecNested(_dir = '.', hide_hidden = True):
 		"""Returns all mp3 under @_DIR arg recursivelly in the form:
 		{'basename' : 'dir1', 'files' : 
 			['file1', {'basename' : 'dir1.1' 
@@ -54,6 +54,8 @@ def getFiles(request):
 		from os import path,listdir
 		files = []
 		for f in listdir(_dir):
+			if f.startswith('.') and hide_hidden:
+				continue  # we don't want to see hidden files
 			file_rel = path.join(_dir,f)
 			if path.isdir(file_rel):
 				files.append(listFilesRecNested(file_rel))
