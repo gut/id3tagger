@@ -21,3 +21,9 @@ th {
 h3 {
 	text-align: center;
 }
+
+div.error {
+	font-weight: bold;
+	text-align: center;
+	color: red;
+}

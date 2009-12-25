@@ -21,7 +21,9 @@
 	</tr>
 </table>
 </form>
+{% if error %}<div class="error">{% endif %}
 {{ content }}
+{% if error %}</div>{% endif %}
 </body>
 </html>
 

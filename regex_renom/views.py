@@ -63,16 +63,19 @@ def getFiles(request):
 				files.append(f)
 		return {'basename' : path.basename(_dir), 'files' : files}
 	
+	def check_dir(d):
+		return path.isdir(d)
+	
 	_get = request.GET
-	rel = _get.get('directory', '')
-	workdir = getcwd()
-	if rel.startswith('/'):
-		dir_name = rel
-	else:
-		dir_name = path.join(workdir, rel) if rel else workdir
+	dir_name = path.realpath(_get.get('directory', getcwd()))
 	title = '%s :: %s' % (APP_NAME, dir_name)
-	files = genHtmlCode(listFilesRecNested(dir_name))
-	d = {'content' : files, 'title' : title}
+	d = {'title' : title}
+	if check_dir(dir_name):
+		files = genHtmlCode(listFilesRecNested(dir_name))
+	else:
+		d['error'] = True
+		files = "Directory not found: %s" % dir_name
+	d['content'] = files
 	d.update(dict(_get.items()))
 	return render_to_response('regex_renom/main.tpl', d)
 
