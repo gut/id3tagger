@@ -37,18 +37,21 @@ def getFiles(request):
 	def applyReplacement(regex, replacement, raw_dict):
 		"""Returns a new dictionary with the 'files' key containing 
 		the tuple (old, replaced)"""
+
 		d['basename'] = raw_dict['basename']
 		files = d['files'] = []
+		any_changes = False
 		for f in raw_dict['files']:
 			if type(f) is dict:
 				files.append(applyReplacement(regex, replacement, f))
 			else:
 				replaced = regex.sub(replacement, f)
 				if replaced != f:
+					any_changes = True
 					files.append([f, replaced])
 				else:
 					files.append(f)
-		return d
+		return d, any_changes
 
 	_get = request.GET
 	dir_name = path.realpath(_get.get('directory', getcwd()))
@@ -62,8 +65,9 @@ def getFiles(request):
 	d = {'title' : title}
 	if checkDir(dir_name):
 		raw_dict = getAllFilesRecursive(dir_name)
-		parsed_files = applyReplacement(re.compile(search), replacement, raw_dict)
+		parsed_files, any_changes = applyReplacement(re.compile(search), replacement, raw_dict)
 		files = genFolderHtmlCode(parsed_files)
+		d['can_change'] = any_changes
 	else:
 		d['error'] = True
 		files = "Directory not found: %s" % dir_name

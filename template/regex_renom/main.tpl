@@ -25,10 +25,19 @@
 		<th colspan="2"><input type="submit" value="Update"></th>
 	</tr>
 </table>
-</form>
+<p>
 {% if error %}<div class="error">{% endif %}
 {{ content }}
 {% if error %}</div>{% endif %}
+{% if can_change %}
+<p>
+<table>
+	<tr>
+		<td class="submit"><button type="submit" name="change" value="change_it">Apply Changes?</button></td>
+	</tr>
+</table>
+{% endif %}
+</form>
 </body>
 </html>
 
