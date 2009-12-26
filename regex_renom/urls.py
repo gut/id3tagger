@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
-__VERSION__ = 0.1
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
