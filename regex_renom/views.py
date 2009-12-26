@@ -42,7 +42,9 @@ def getFiles(request):
 		any_changes = False
 		for f in raw_dict['files']:
 			if type(f) is dict:
-				files.append(applyReplacement(regex, replacement, f))
+				folder, had_changes = applyReplacement(regex, replacement, f)
+				any_changes = any_changes or had_changes  # if any is True, remain!
+				files.append(folder)
 			else:
 				replaced = regex.sub(replacement, f)
 				if replaced != f:
