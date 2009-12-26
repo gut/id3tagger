@@ -1,42 +1,16 @@
-body {
-	background-color: #eee;
-}
-
-table {
-	width : 600px;
+body {background-color: #eee;}
+table {width : 600px;
 	margin-left: auto;
 	margin-right: auto;
 	border-width: 2 2 2 2;
-	border-style: solid;
-}
-
-tr.spacer {
-	height: 10px;
-}
-
-td {
-	background-color: #ddd;
-}
-
-td.changed {
-	font-weight: bold;
-}
-
-td.submit {
+	border-style: solid;}
+tr.spacer {height: 10px;}
+td {background-color: #ddd;}
+td.changed, td.disk_changed {font-weight: bold;}
+td.disk_changed {color : blue;}
+td.submit {text-align: center;}
+th {background-color: #bbb;
+h3 {text-align: center;}
+div.error {font-weight: bold;
 	text-align: center;
-}
-
-th {
-	background-color: #bbb;
-}
-
-h3 {
-	text-align: center;
-}
-
-div.error {
-	font-weight: bold;
-	text-align: center;
-	color: red;
-}
-
+	color: red;}
