@@ -28,12 +28,12 @@ def genFolderHtmlCode(arg):
 	files = []
 	for f in sorted(arg['files']):
 		if type(f) is dict:
-			files.append({'folder' : genFolderHtmlCode(f), 'type' : 'generate_new_table'})
+			files.append({'folder' : genFolderHtmlCode(f), 'generate_new_table' : True})
 		elif type(f) is list or type(f) is tuple:
 			# I guess it's correctly parsed...
 			e = {'list' : f}
 			if f[0] != f[1]:
-				e['type'] = 'changed'
+				e['changed'] = True
 			files.append(e)
 		else:
 			files.append(f)
