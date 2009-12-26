@@ -18,7 +18,7 @@
 
 __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
 
-from os import path,listdir
+from os import path,listdir,getcwd,chdir,rename
 from glob import glob
 
 def getAllFilesRecursive(_dir = '.', ext = '*', hide_hidden = True):
@@ -43,3 +43,18 @@ def getAllFilesRecursive(_dir = '.', ext = '*', hide_hidden = True):
 def makeRenamingChanges(parsed_files):
 	"""Apply renaming to the files on @PARSED_FILES as described
 	by updateDictWithReplacement"""
+	def makeRenamingChangesAux(parsed_files):
+		root = getcwd()
+		chdir(path.join(root, parsed_files['basename']))
+		for f in parsed_files['files']:
+			print f
+			if type(f) is dict:  # recursion!
+				makeRenamingChangesAux(f)
+			elif type(f) is tuple or type(f) is list:
+				rename(*f)  # rename(f[0], f[1])
+		chdir(root)
+
+	# ignores the first basename as it's the same of the current dir
+	parsed_files['basename'] = ''
+	makeRenamingChangesAux(parsed_files)
+

@@ -23,13 +23,13 @@ from defs import *
 from os import path
 _ROOT_PATH = path.dirname(path.realpath(__file__))
 
-def genFolderHtmlCode(arg):
+def genFolderHtmlCode(arg, disk_changed = False):
 	"compiles the dict found on @ARG to the html on template"
-	d = {'basename' : arg['basename']}
+	d = {'basename' : arg['basename'], 'disk_changed' : disk_changed}
 	files = []
 	for f in sorted(arg['files']):
 		if type(f) is dict:
-			files.append({'folder' : genFolderHtmlCode(f), 'generate_new_table' : True})
+			files.append({'folder' : genFolderHtmlCode(f, disk_changed), 'generate_new_table' : True})
 		elif type(f) is list or type(f) is tuple:
 			# I guess it's correctly parsed...
 			e = {'list' : f}

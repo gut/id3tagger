@@ -10,7 +10,11 @@
 		{% if f.changed %}
 			<td>{{ f.list.0 }}</td>
 			<td>-&gt;</td>
-			<td class="changed">{{ f.list.1 }}</td>
+			{% if disk_changed %}
+				<td class="disk_changed">{{ f.list.1 }}</td>
+			{% else %}
+				<td class="changed">{{ f.list.1 }}</td>
+			{% endif %}
 		{% else %}
 			<td colspan='3'>{{ f }}</td>
 		{% endif %}

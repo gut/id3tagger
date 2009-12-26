@@ -27,7 +27,7 @@ _ROOT_PATH = path.dirname(path.realpath(__file__))
 
 
 def getFiles(request):
-	from common.files import getAllFilesRecursive
+	from common.files import getAllFilesRecursive, makeRenamingChanges
 	from common.html import genFolderHtmlCode
 	import re
 
@@ -61,7 +61,7 @@ def getFiles(request):
 	extension = _get.get("extension", "")
 	search = _get.get("search", "")
 	replacement = _get.get("replacement", "")
-	willMakeChanges = lambda : _get.get('change', "") is CHANGE_TRUE_VALUE
+	willMakeChanges = lambda : _get.get('change', "") == CHANGE_TRUE_VALUE
 
 	title = '%s :: %s' % (APP_NAME, dir_name)
 	d = {'title' : title}
@@ -70,8 +70,10 @@ def getFiles(request):
 		parsed_files, any_changes = updateDictWithReplacement(re.compile(search), replacement, raw_dict)
 		if willMakeChanges():
 			makeRenamingChanges(parsed_files)
-		files = genFolderHtmlCode(parsed_files)
-		d.update({'can_change' : any_changes, 'change_value' : CHANGE_TRUE_VALUE})
+		elif any_changes:  # don't appear "Apply Changes" if already changing
+			d['can_change'] = any_changes
+		d['change_value'] = CHANGE_TRUE_VALUE
+		files = genFolderHtmlCode(parsed_files, willMakeChanges())
 	else:
 		d['error'] = True
 		files = "Directory not found: %s" % dir_name
