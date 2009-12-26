@@ -61,15 +61,15 @@ def getFiles(request):
 	extension = _get.get("extension", "")
 	search = _get.get("search", "")
 	replacement = _get.get("replacement", "")
-	makeChanges = lambda : _get.get('change', "") is CHANGE_TRUE_VALUE
+	willMakeChanges = lambda : _get.get('change', "") is CHANGE_TRUE_VALUE
 
 	title = '%s :: %s' % (APP_NAME, dir_name)
 	d = {'title' : title}
 	if checkDir(dir_name):
 		raw_dict = getAllFilesRecursive(dir_name)
 		parsed_files, any_changes = updateDictWithReplacement(re.compile(search), replacement, raw_dict)
-		if makeChanges():
-			makeDiskChanges(parsed_files)
+		if willMakeChanges():
+			makeRenamingChanges(parsed_files)
 		files = genFolderHtmlCode(parsed_files)
 		d.update({'can_change' : any_changes, 'change_value' : CHANGE_TRUE_VALUE})
 	else:

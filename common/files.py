@@ -40,3 +40,6 @@ def getAllFilesRecursive(_dir = '.', ext = '*', hide_hidden = True):
 			files.append(f)
 	return {'basename' : path.basename(_dir), 'files' : files}
 
+def makeRenamingChanges(parsed_files):
+	"""Apply renaming to the files on @PARSED_FILES as described
+	by updateDictWithReplacement"""
