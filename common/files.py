@@ -17,32 +17,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
-__VERSION__ = 0.1
 
-# Create your views here.
-from django.shortcuts import render_to_response
-from os import path, listdir, getcwd
-from defs import *
-_ROOT_PATH = path.dirname(path.realpath(__file__))
+from os import path,listdir
 
+def listFilesRecNested(_dir = '.', hide_hidden = True):
+	"""Returns all mp3 under @_DIR arg recursivelly in the form:
+	{'basename' : 'dir1', 'files' : 
+		['file1', {'basename' : 'dir1.1' 
+		...},...]
+	,..}"""
 
-def getFiles(request):
-	from common.files import listFilesRecNested
-	from common.html import genFolderHtmlCode
-
-	def check_dir(d):
-		return path.isdir(d)
-	
-	_get = request.GET
-	dir_name = path.realpath(_get.get('directory', getcwd()))
-	title = '%s :: %s' % (APP_NAME, dir_name)
-	d = {'title' : title}
-	if check_dir(dir_name):
-		files = genFolderHtmlCode(listFilesRecNested(dir_name))
-	else:
-		d['error'] = True
-		files = "Directory not found: %s" % dir_name
-	d['content'] = files
-	d.update(dict(_get.items()))
-	return render_to_response('regex_renom/main.tpl', d)
+	files = []
+	for f in listdir(_dir):
+		if f.startswith('.') and not f.startswith('./') and hide_hidden:
+			continue  # we don't want to see hidden files
+		file_rel = path.join(_dir,f)
+		if path.isdir(file_rel):
+			files.append(listFilesRecNested(file_rel))
+		else:  # regular file
+			files.append(f)
+	return {'basename' : path.basename(_dir), 'files' : files}
 

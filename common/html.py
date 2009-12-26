@@ -17,32 +17,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
-__VERSION__ = 0.1
 
-# Create your views here.
-from django.shortcuts import render_to_response
-from os import path, listdir, getcwd
-from defs import *
+from django import template
+from os import path
 _ROOT_PATH = path.dirname(path.realpath(__file__))
 
-
-def getFiles(request):
-	from common.files import listFilesRecNested
-	from common.html import genFolderHtmlCode
-
-	def check_dir(d):
-		return path.isdir(d)
-	
-	_get = request.GET
-	dir_name = path.realpath(_get.get('directory', getcwd()))
-	title = '%s :: %s' % (APP_NAME, dir_name)
-	d = {'title' : title}
-	if check_dir(dir_name):
-		files = genFolderHtmlCode(listFilesRecNested(dir_name))
-	else:
-		d['error'] = True
-		files = "Directory not found: %s" % dir_name
-	d['content'] = files
-	d.update(dict(_get.items()))
-	return render_to_response('regex_renom/main.tpl', d)
+def genFolderHtmlCode(arg):
+	d = {'basename' : arg['basename']}
+	files = []
+	for f in sorted(arg['files']):
+		if type(f) is dict:
+			files.append([genFolderHtmlCode(f), 'generate_new_table'])
+		elif type(f) is list:
+			files.append(f)
+		else:
+			# as the template expects a 2-position list ('now' and 'after'), let's do it
+			files.append([f, ''])
+	d['files'] = files
+	template_folder = path.join(_ROOT_PATH, '..', 'template', 'regex_renom', 'folder.tpl')
+	t = template.Template(open(template_folder).read())
+	return t.render(template.Context(d))
 
