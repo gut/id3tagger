@@ -34,7 +34,7 @@ def getFiles(request):
 	def checkDir(d):
 		return path.isdir(d)
 	
-	def applyReplacement(regex, replacement, raw_dict):
+	def applyReplacementOnDict(regex, replacement, raw_dict):
 		"""Returns a new dictionary with the 'files' key containing 
 		the tuple (old, replaced)"""
 
@@ -66,7 +66,7 @@ def getFiles(request):
 	d = {'title' : title}
 	if checkDir(dir_name):
 		raw_dict = getAllFilesRecursive(dir_name)
-		parsed_files, any_changes = applyReplacement(re.compile(search), replacement, raw_dict)
+		parsed_files, any_changes = applyReplacementOnDict(re.compile(search), replacement, raw_dict)
 		files = genFolderHtmlCode(parsed_files)
 		d['can_change'] = any_changes
 	else:
