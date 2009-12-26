@@ -19,6 +19,7 @@
 __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
 
 from django import template
+from defs import *
 from os import path
 _ROOT_PATH = path.dirname(path.realpath(__file__))
 

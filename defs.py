@@ -19,3 +19,4 @@
 __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
 
 APP_NAME = "id3tagger"
+CHANGE_TRUE_VALUE = "change_it"

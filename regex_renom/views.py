@@ -34,7 +34,7 @@ def getFiles(request):
 	def checkDir(d):
 		return path.isdir(d)
 	
-	def applyReplacementOnDict(regex, replacement, raw_dict):
+	def updateDictWithReplacement(regex, replacement, raw_dict):
 		"""Returns a new dictionary with the 'files' key containing 
 		the tuple (old, replaced)"""
 
@@ -42,7 +42,7 @@ def getFiles(request):
 		any_changes = False
 		for f in raw_dict['files']:
 			if type(f) is dict:
-				folder, had_changes = applyReplacement(regex, replacement, f)
+				folder, had_changes = updateDictWithReplacement(regex, replacement, f)
 				any_changes = any_changes or had_changes  # if any is True, remain!
 				files.append(folder)
 			else:
@@ -61,18 +61,21 @@ def getFiles(request):
 	extension = _get.get("extension", "")
 	search = _get.get("search", "")
 	replacement = _get.get("replacement", "")
+	makeChanges = lambda : _get.get('change', "") is CHANGE_TRUE_VALUE
 
 	title = '%s :: %s' % (APP_NAME, dir_name)
 	d = {'title' : title}
 	if checkDir(dir_name):
 		raw_dict = getAllFilesRecursive(dir_name)
-		parsed_files, any_changes = applyReplacementOnDict(re.compile(search), replacement, raw_dict)
+		parsed_files, any_changes = updateDictWithReplacement(re.compile(search), replacement, raw_dict)
+		if makeChanges():
+			makeDiskChanges(parsed_files)
 		files = genFolderHtmlCode(parsed_files)
-		d['can_change'] = any_changes
+		d.update({'can_change' : any_changes, 'change_value' : CHANGE_TRUE_VALUE})
 	else:
 		d['error'] = True
 		files = "Directory not found: %s" % dir_name
 	d['content'] = files
-	d.update(dict(_get.items()))
+	d.update(dict(_get.items()))  # reuse the defined variables on _get
 	return render_to_response('regex_renom/main.tpl', d)
 

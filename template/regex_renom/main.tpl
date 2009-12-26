@@ -33,7 +33,7 @@
 <p>
 <table>
 	<tr>
-		<th class="submit"><button type="submit" name="change" value="change_it">Apply Changes?</button></th>
+		<th class="submit"><button type="submit" name="change" value="{{ change_value }}">Apply Changes?</button></th>
 	</tr>
 </table>
 {% endif %}
