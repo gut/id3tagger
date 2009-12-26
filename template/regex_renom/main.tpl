@@ -33,7 +33,7 @@
 <p>
 <table>
 	<tr>
-		<td class="submit"><button type="submit" name="change" value="change_it">Apply Changes?</button></td>
+		<th class="submit"><button type="submit" name="change" value="change_it">Apply Changes?</button></th>
 	</tr>
 </table>
 {% endif %}
