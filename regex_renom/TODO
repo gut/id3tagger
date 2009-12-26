@@ -1,0 +1,1 @@
+use difflib.ndiff to get what is exactly changing and show on the interface
