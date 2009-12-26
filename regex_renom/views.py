@@ -38,8 +38,7 @@ def getFiles(request):
 		"""Returns a new dictionary with the 'files' key containing 
 		the tuple (old, replaced)"""
 
-		d['basename'] = raw_dict['basename']
-		files = d['files'] = []
+		files = []
 		any_changes = False
 		for f in raw_dict['files']:
 			if type(f) is dict:
@@ -51,7 +50,7 @@ def getFiles(request):
 					files.append([f, replaced])
 				else:
 					files.append(f)
-		return d, any_changes
+		return {'basename' : raw_dict['basename'], 'files' : files}, any_changes
 
 	_get = request.GET
 	dir_name = path.realpath(_get.get('directory', getcwd()))
