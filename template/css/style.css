@@ -18,6 +18,10 @@ td {
 	background-color: #ddd;
 }
 
+td.changed {
+	font-weight: bold;
+}
+
 th {
 	background-color: #bbb;
 }

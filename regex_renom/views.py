@@ -27,18 +27,43 @@ _ROOT_PATH = path.dirname(path.realpath(__file__))
 
 
 def getFiles(request):
-	from common.files import listFilesRecNested
+	from common.files import getAllFilesRecursive
 	from common.html import genFolderHtmlCode
+	import re
 
-	def check_dir(d):
+	def checkDir(d):
 		return path.isdir(d)
 	
+	def applyReplacement(regex, replacement, raw_dict):
+		"""Returns a new dictionary with the 'files' key containing 
+		the tuple (old, replaced)"""
+		d['basename'] = raw_dict['basename']
+		files = d['files'] = []
+		for f in raw_dict['files']:
+			if type(f) is dict:
+				files.append(applyReplacement(regex, replacement, f))
+			else:
+				replaced = regex.sub(replacement, f)
+				if replaced != f:
+					files.append([f, replaced])
+				else:
+					files.append(f)
+		return d
+
 	_get = request.GET
 	dir_name = path.realpath(_get.get('directory', getcwd()))
+	# p = 'extension'; exec('%s = _get.get("%s", "")' % (p,p))
+	#  as that is not allowed...
+	extension = _get.get("extension", "")
+	search = _get.get("search", "")
+	replacement = _get.get("replacement", "")
+
 	title = '%s :: %s' % (APP_NAME, dir_name)
 	d = {'title' : title}
-	if check_dir(dir_name):
-		files = genFolderHtmlCode(listFilesRecNested(dir_name))
+	if checkDir(dir_name):
+		raw_dict = getAllFilesRecursive(dir_name)
+		parsed_files = applyReplacement(re.compile(search), replacement, raw_dict)
+		files = genFolderHtmlCode(parsed_files)
 	else:
 		d['error'] = True
 		files = "Directory not found: %s" % dir_name

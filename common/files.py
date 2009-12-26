@@ -19,21 +19,23 @@
 __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
 
 from os import path,listdir
+from glob import glob
 
-def listFilesRecNested(_dir = '.', hide_hidden = True):
-	"""Returns all mp3 under @_DIR arg recursivelly in the form:
+def getAllFilesRecursive(_dir = '.', ext = '*', hide_hidden = True):
+	"""Returns all matched @EXT files under @_DIR arg recursivelly in the form:
 	{'basename' : 'dir1', 'files' : 
 		['file1', {'basename' : 'dir1.1' 
 		...},...]
 	,..}"""
 
 	files = []
-	for f in listdir(_dir):
+	for f in glob(path.join(_dir, ext)):
+		f = path.basename(f)
 		if f.startswith('.') and not f.startswith('./') and hide_hidden:
 			continue  # we don't want to see hidden files
 		file_rel = path.join(_dir,f)
 		if path.isdir(file_rel):
-			files.append(listFilesRecNested(file_rel))
+			files.append(getAllFilesRecursive(file_rel))
 		else:  # regular file
 			files.append(f)
 	return {'basename' : path.basename(_dir), 'files' : files}

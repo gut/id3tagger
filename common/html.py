@@ -23,16 +23,20 @@ from os import path
 _ROOT_PATH = path.dirname(path.realpath(__file__))
 
 def genFolderHtmlCode(arg):
+	"compiles the dict found on @ARG to the html on template"
 	d = {'basename' : arg['basename']}
 	files = []
 	for f in sorted(arg['files']):
 		if type(f) is dict:
-			files.append([genFolderHtmlCode(f), 'generate_new_table'])
-		elif type(f) is list:
-			files.append(f)
+			files.append({'folder' : genFolderHtmlCode(f), 'type' : 'generate_new_table'})
+		elif type(f) is list or type(f) is tuple:
+			# I guess it's correctly parsed...
+			e = {'list' : f}
+			if f[0] != f[1]:
+				e['type'] = 'changed'
+			files.append(e)
 		else:
-			# as the template expects a 2-position list ('now' and 'after'), let's do it
-			files.append([f, ''])
+			files.append(f)
 	d['files'] = files
 	template_folder = path.join(_ROOT_PATH, '..', 'template', 'regex_renom', 'folder.tpl')
 	t = template.Template(open(template_folder).read())
