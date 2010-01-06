@@ -17,14 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
-__VERSION__ = 0.1
+from django.conf.urls.defaults import *
 
-# Create your views here.
-from django.shortcuts import render_to_response
-import os
-_ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-
-def what(request):
-	dirs = [i for i in os.listdir(_ROOT_PATH) if os.path.isdir(os.path.join(_ROOT_PATH, i)) and i not in ('template', '.git', 'common')]
-	return render_to_response('menu.tpl', {'entries' : dirs})
-
+urlpatterns = patterns('',
+	('^.*$', 'id3info.views.analyse'),
+)

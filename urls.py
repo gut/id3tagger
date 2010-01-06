@@ -8,6 +8,7 @@ _ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 urlpatterns = patterns('',
 	(r'^regex_renom/', include('id3tagger.regex_renom.urls')),
+	(r'^id3info/', include('id3tagger.id3info.urls')),
     # Example:
     # (r'^id3tagger/', include('id3tagger.foo.urls')),
 
