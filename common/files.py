@@ -19,9 +19,8 @@
 __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
 
 from os import path,listdir,getcwd,chdir,rename
-from glob import glob
 
-def getAllFilesRecursive(_dir = '.', ext = '*', hide_hidden = True):
+def getAllFilesRecursive(_dir = '.', ext = None, hide_hidden = True):
 	"""Returns all matched @EXT files under @_DIR arg recursivelly in the form:
 	{'basename' : 'dir1', 'files' : 
 		['file1', {'basename' : 'dir1.1' 
@@ -29,10 +28,12 @@ def getAllFilesRecursive(_dir = '.', ext = '*', hide_hidden = True):
 	,..}"""
 
 	files = []
-	for f in glob(path.join(_dir, ext)):
+	for f in listdir(_dir):
 		f = path.basename(f)
 		if f.startswith('.') and not f.startswith('./') and hide_hidden:
 			continue  # we don't want to see hidden files
+		if ext and not f.endswith(ext):
+			continue  # filtering
 		file_rel = path.join(_dir,f)
 		if path.isdir(file_rel):
 			files.append(getAllFilesRecursive(file_rel))
@@ -54,6 +55,8 @@ def makeRenamingChanges(parsed_files):
 		chdir(root)
 
 	# ignores the first basename as it's the same of the current dir
+	old = parsed_files['basename']
 	parsed_files['basename'] = ''
 	makeRenamingChangesAux(parsed_files)
+	parsed_files['basename'] = old
 
