@@ -28,7 +28,7 @@ _ROOT_PATH = path.dirname(path.realpath(__file__))
 
 def getFiles(request):
 	from common.files import getAllFilesRecursive, makeRenamingChanges
-	from common.html import genFolderHtmlCode
+	from common.html import genFolderCode
 	import re
 
 	def checkDir(d):
@@ -73,7 +73,8 @@ def getFiles(request):
 		elif any_changes:  # don't appear "Apply Changes" if already changing
 			d['can_change'] = any_changes
 		d['change_value'] = CHANGE_TRUE_VALUE
-		files = genFolderHtmlCode(parsed_files, willMakeChanges())
+		folder_template = path.join(TEMPLATE_FOLDER, 'regex_renom', 'folder.tpl')
+		files = genFolderCode(parsed_files, folder_template, willMakeChanges())
 	else:
 		d['error'] = True
 		files = "Directory not found: %s" % dir_name

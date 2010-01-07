@@ -23,13 +23,15 @@ from defs import *
 from os import path
 _ROOT_PATH = path.dirname(path.realpath(__file__))
 
-def genFolderHtmlCode(arg, disk_changed = False):
-	"compiles the dict found on @ARG to the html on template"
-	d = {'basename' : arg['basename'], 'disk_changed' : disk_changed}
+def genFolderCode(d, t, disk_changed = False):
+	"compiles the dict found on @D to the html on template @T"
+	folder_dict = {'basename' : d['basename'], 'disk_changed' : disk_changed}
 	files = []
-	for f in sorted(arg['files']):
+	for f in sorted(d['files']):
 		if type(f) is dict:
-			files.append({'folder' : genFolderHtmlCode(f, disk_changed), 'generate_new_table' : True})
+			print f.has_key('files')
+		if type(f) is dict and f.has_key('files'):  # else it's a dict of Tag
+			files.append({'folder' : genFolderCode(f, t, disk_changed), 'generate_new_table' : True})
 		elif type(f) is list or type(f) is tuple:
 			# I guess it's correctly parsed...
 			e = {'list' : f}
@@ -38,8 +40,7 @@ def genFolderHtmlCode(arg, disk_changed = False):
 			files.append(e)
 		else:
 			files.append(f)
-	d['files'] = files
-	template_folder = path.join(_ROOT_PATH, '..', 'template', 'regex_renom', 'folder.tpl')
-	t = template.Template(open(template_folder).read())
-	return t.render(template.Context(d))
+	folder_dict['files'] = files
+	t = template.Template(open(t).read())
+	return t.render(template.Context(folder_dict))
 
