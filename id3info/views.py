@@ -23,3 +23,6 @@ __VERSION__ = 0.1
 from django.shortcuts import render_to_response
 from defs import *
 
+def analyse(request):
+	return render_to_response('id3info/main.tpl', {})
+

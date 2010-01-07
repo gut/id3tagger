@@ -63,7 +63,7 @@ def getFiles(request):
 	replacement = _get.get("replacement", "")
 	willMakeChanges = lambda : _get.get('change', "") == CHANGE_TRUE_VALUE
 
-	title = '%s :: %s' % (APP_NAME, dir_name)
+	title = makeTitle (dir_name)
 	d = {'title' : title}
 	if checkDir(dir_name):
 		raw_dict = getAllFilesRecursive(dir_name)

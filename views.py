@@ -21,10 +21,11 @@ __VERSION__ = 0.1
 
 # Create your views here.
 from django.shortcuts import render_to_response
+from defs import *
 import os
 _ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 def what(request):
 	dirs = [i for i in os.listdir(_ROOT_PATH) if os.path.isdir(os.path.join(_ROOT_PATH, i)) and i not in ('template', '.git', 'common')]
-	return render_to_response('menu.tpl', {'entries' : dirs})
+	return render_to_response('menu.tpl', {'entries' : dirs, 'title' : makeTitle('menu')})
 

@@ -1,9 +1,6 @@
-<html>
-<head>
-	<title>{{ title }}</title>
-	<link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
+{% extends "../base.tpl" %}
+
+{% block content %}
 <h3>Renaming files with regex:</h3>
 <form method="get" target="_self">
 <table>
@@ -38,6 +35,4 @@
 </table>
 {% endif %}
 </form>
-</body>
-</html>
-
+{% endblock %}
