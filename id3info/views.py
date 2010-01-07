@@ -21,8 +21,32 @@ __VERSION__ = 0.1
 
 # Create your views here.
 from django.shortcuts import render_to_response
+from os import path, getcwd
 from defs import *
 
 def analyse(request):
-	return render_to_response('id3info/main.tpl', {})
+	from common.files import getAllFilesRecursive
+	from common.id3 import getTag, DESIRED_TAGS
+	from common.html import genFolderCode
+
+	def checkDir(d):
+		return path.isdir(d)
+
+	_get = request.GET
+	dir_name = path.realpath(_get.get('directory', getcwd()))
+	willMakeChanges = lambda : _get.get('change', "") == CHANGE_TRUE_VALUE
+
+	title = makeTitle (dir_name)
+	d = {'title' : title}
+	if checkDir(dir_name):
+		raw_dict = getAllFilesRecursive(dir_name, 'mp3')
+		getTag(raw_dict)
+		folder_template = path.join(TEMPLATE_FOLDER, 'id3info', 'folder.tpl')
+		files = genFolderCode(raw_dict, folder_template)
+	else:
+		d['error'] = True
+		files = "Directory not found: %s" % dir_name
+	d['content'] = files
+	d.update(dict(_get.items()))  # reuse the defined variables on _get
+	return render_to_response('id3info/main.tpl', d)
 
