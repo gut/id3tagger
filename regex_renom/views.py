@@ -63,8 +63,7 @@ def getFiles(request):
 	replacement = _get.get("replacement", "")
 	willMakeChanges = lambda : _get.get('change', "") == CHANGE_TRUE_VALUE
 
-	title = makeTitle (dir_name)
-	d = {'title' : title}
+	d = {'title' : makeTitle(dir_name)}
 	if checkDir(dir_name):
 		raw_dict = getAllFilesRecursive(dir_name)
 		parsed_files, any_changes = updateDictWithReplacement(re.compile(search), replacement, raw_dict)
