@@ -1,4 +1,4 @@
-{% extends "../base.tpl" %}
+{% extends "base.tpl" %}
 
 {% block content %}
 <h3>Renaming files with regex:</h3>

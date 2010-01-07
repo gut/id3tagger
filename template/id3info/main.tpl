@@ -1,4 +1,4 @@
-{% extends "../base.tpl" %}
+{% extends "base.tpl" %}
 
 {% block content %}
 <form method="get" target="_self">
