@@ -47,7 +47,6 @@ def makeRenamingChanges(parsed_files):
 		root = getcwd()
 		chdir(path.join(root, parsed_files['basename']))
 		for f in parsed_files['files']:
-			print f
 			if type(f) is dict:  # recursion!
 				makeRenamingChangesAux(f)
 			elif type(f) is tuple or type(f) is list:
