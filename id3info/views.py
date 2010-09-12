@@ -26,7 +26,6 @@ from defs import *
 
 def analyse(request):
 	from common.files import getAllFilesRecursive
-	from common.id3 import getTag
 	from common.tags import DESIRED_TAGS
 	from common.html import genFolderCode
 
@@ -41,7 +40,8 @@ def analyse(request):
 	d = {'title' : title}
 	if checkDir(dir_name):
 		raw_dict = getAllFilesRecursive(dir_name, 'mp3')
-		getTag(raw_dict)
+		if raw_dict:
+			print raw_dict
 		folder_template = path.join(TEMPLATE_FOLDER, 'id3info', 'folder.tpl')
 		files = genFolderCode(raw_dict, folder_template)
 	else:

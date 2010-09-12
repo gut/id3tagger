@@ -25,21 +25,22 @@ _ROOT_PATH = path.dirname(path.realpath(__file__))
 
 def genFolderCode(d, t, disk_changed = False):
 	"compiles the dict found on @D to the html on template @T"
-	folder_dict = {'basename' : d['basename'], 'disk_changed' : disk_changed}
 	files = []
-	for f in sorted(d['files']):
-		if type(f) is dict:
-			print f.has_key('files')
-		if type(f) is dict and f.has_key('files'):  # else it's a dict of Tag
-			files.append({'folder' : genFolderCode(f, t, disk_changed), 'generate_new_table' : True})
-		elif type(f) is list or type(f) is tuple:
-			# I guess it's correctly parsed...
-			e = {'list' : f}
-			if f[0] != f[1]:
-				e['changed'] = True
-			files.append(e)
-		else:
-			files.append(f)
+	if d.has_key('basename'):
+		folder_dict = {'basename' : d['basename'], 'disk_changed' : disk_changed}
+		for f in sorted(d['files']):
+			if type(f) is dict:
+				print f.has_key('files')
+			if type(f) is dict and f.has_key('files'):  # else it's a dict of Tag
+				files.append({'folder' : genFolderCode(f, t, disk_changed), 'generate_new_table' : True})
+			elif type(f) is list or type(f) is tuple:
+				# I guess it's correctly parsed...
+				e = {'list' : f}
+				if f[0] != f[1]:
+					e['changed'] = True
+				files.append(e)
+			else:
+				files.append(f)
 	folder_dict['files'] = files
 	t = template.Template(open(t).read())
 	return t.render(template.Context(folder_dict))
