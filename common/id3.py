@@ -21,8 +21,8 @@ __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
 from os import path,listdir,getcwd,chdir,rename
 from eyeD3 import Tag
 from glob import glob
-
-DESIRED_TAGS = ('Album', 'Artist', 'DiscNum', 'Genre', 'Title', 'TrackNum', 'Year')
+from structure import Directory, TagElement
+from tags import DESIRED_TAGS
 
 def getTag(parsed_files):
 	"""Get tags of each @PARSED_FILES. Return a

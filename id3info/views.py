@@ -26,7 +26,8 @@ from defs import *
 
 def analyse(request):
 	from common.files import getAllFilesRecursive
-	from common.id3 import getTag, DESIRED_TAGS
+	from common.id3 import getTag
+	from common.tags import DESIRED_TAGS
 	from common.html import genFolderCode
 
 	def checkDir(d):
