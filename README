@@ -1,0 +1,4 @@
+id3tagger
+========
+
+an id3tagger made on python that tags the mp3 based on the filename. Has a regex renamer and is made on django.
