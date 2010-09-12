@@ -19,16 +19,15 @@
 __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
 
 from os import path,listdir,getcwd,chdir,rename
+from structure import Directory, TagElement
 
 def getAllFilesRecursive(_dir = '.', ext = None, hide_hidden = True):
-	"""Returns all matched @EXT files under @_DIR arg recursivelly in the form:
-	{'basename' : 'dir1', 'files' : 
-		['file1', {'basename' : 'dir1.1' 
-		...},...]
-	,..}"""
+	"""Returns all matched @EXT files under @_DIR arg recursivelly with the Directory struct"""
+	things = Directory(_dir)
 
-	files = []
-	for f in listdir(_dir):
+	old_dir = getcwd()
+	chdir(things.basename)
+	for f in listdir('.'):
 		f = path.basename(f)
 		if f.startswith('.') and not f.startswith('./') and hide_hidden:
 			continue  # we don't want to see hidden files
@@ -36,10 +35,13 @@ def getAllFilesRecursive(_dir = '.', ext = None, hide_hidden = True):
 			continue  # filtering
 		file_rel = path.join(_dir,f)
 		if path.isdir(file_rel):
-			files.append(getAllFilesRecursive(file_rel))
+			if not things.addDirectory(getAllFilesRecursive(file_rel, ext, hide_hidden)):
+				raise Exception
 		else:  # regular file
-			files.append(f)
-	return {'basename' : path.basename(_dir), 'files' : files}
+			if not things.addFile(TagElement(file_rel)):
+				raise Exception
+	chdir(old_dir)
+	return things
 
 def makeRenamingChanges(parsed_files):
 	"""Apply renaming to the files on @PARSED_FILES as described
