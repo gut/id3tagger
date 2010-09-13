@@ -39,11 +39,11 @@ def analyse(request):
 	title = makeTitle (dir_name)
 	d = {'title' : title}
 	if checkDir(dir_name):
-		raw_dict = getAllFilesRecursive(dir_name, 'mp3')
-		if raw_dict:
-			print raw_dict
+		directories = getAllFilesRecursive(dir_name, 'mp3')
+		if directories:
+			print directories
 		folder_template = path.join(TEMPLATE_FOLDER, 'id3info', 'folder.tpl')
-		files = genFolderCode(raw_dict, folder_template)
+		files = genFolderCode(directories, folder_template)
 	else:
 		d['error'] = True
 		files = "Directory not found: %s" % dir_name

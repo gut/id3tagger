@@ -42,8 +42,7 @@ class TagElement:
 		self.new_tags = copy(self.tags.copy)
 
 	def __repr__(self):
-		print "   TagElement: %s" % self.filename
-		print "    tags: %s" % self.tags
+		return "   TagElement: %s\n    tags: %s" % (self.basename, self.tags)
 
 class Directory:
 	"""Group of TagElement from the same directory. Check @basename and
@@ -56,9 +55,7 @@ class Directory:
 		self.basename = _basename
 
 	def __repr__(self):
-		print "Directory: %s" % self.basename
-		print " directories inside: %s" % self.directories
-		print " files inside: %s" % self.files
+		return "Directory: %s\n directories inside: %s\n files inside: %s" % (self.basename, self.directories, self.files)
 
 	def addFile(self, new_file):
 		if isinstance(new_file, TagElement):
