@@ -20,12 +20,14 @@ __AUTHOR__ = "Gustavo Serra Scalet <gsscalet@gmail.com>"
 from eyeD3 import Tag
 from tags import DESIRED_TAGS
 from os import path
+from copy import copy
 
 class TagElement:
 	"""Access @filename and @tags for desired information"""
 	tags = {}
 	def __init__(self, _filename):
-		self.filename = path.basename(_filename)
+		self.filename = _filename
+		self.basename = path.basename(_filename)
 		tag = Tag()
 		tag.link(self.filename)
 		for t in DESIRED_TAGS:
@@ -36,6 +38,8 @@ class TagElement:
 				self.tags[t] = eval('tag.get%s()' % t)[0]  # Tuple: (TrackNum, TotalTracks)
 			else:
 				self.tags[t] = eval('tag.get%s()' % t)
+		# by default the new tags are the same as the old ones
+		self.new_tags = copy(self.tags.copy)
 
 	def __repr__(self):
 		print "   TagElement: %s" % self.filename
